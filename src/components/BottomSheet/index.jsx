@@ -63,6 +63,7 @@ const TextBox = styled.div`
 const Info = styled.div`
   margin-top: 30px;
   border-top: 1px solid #E2E2E2;
+  
 `;
 
 const InfoTitleBox = styled.div`
@@ -80,8 +81,8 @@ const InfoTitleBox = styled.div`
 const InfoTextBox = styled.ul`
   border-radius: 8px;
   border: 1px solid #E2E2E2;
-  padding: 30px 20px;
-  
+  padding: 30px 10px;
+
   > li {
     color: #999999;
     font-size: 14px;
@@ -92,52 +93,128 @@ const InfoTextBox = styled.ul`
     }
     ::before {
       content: '';
-      display: block;
+      display: inline-block;
       width: 3px;
       height: 3px;
       background-color: #999999;
       border-radius: 50%;
-      position: absolute;
-      left: -10px;
-      top: 10px;
+      margin: 5px;
     }
-    > ul {
+    .dashed-list {
+      border: none;
+      margin-top: 10px;
       > li {
         color: #999999;
-        
+        > span {
+          color: #999999;
+        }
       }
     }
-    > table {
+    > ul {
       width: 100%;
       border: 1px solid #FAFAFA;
       margin-top: 5px;
-      > tr {
+      > li {
         display: flex;
         flex-direction: column;
-        > th {
-          display: block;
-          text-align: center;
-          line-height: 30px;
-          width: 100%;
-          background-color: #CEDAEF;
-          color: #666666;
-          height: 30px;
-          font-size: 14px;
-          font-family: 'Noto Sans KR', sans-serif;
-        }
-        > td {
+        > p {
           display: block;
           text-align: center;
           line-height: 30px;
           width: 100%;
           color: #999999;
-          height: 30px;
+          > ul {
+        
+            > li {
+              display: flex;
+              border-top: 1px solid #FAFAFA;
+              > p {
+                width: 50%;
+                color: #999999;
+              }
+            }
+          }
+        }
+      }
+      .td {
+        display: flex;
+        justify-content: space-between;
+        > span {
+          width: 50%;
+          color: #999999;
+          
+          :first-child {
+            border-right: 1px solid #FAFAFA;
+          }
+        }
+      }
+      .th {
+        display: block;
+        text-align: center;
+        line-height: 30px;
+        width: 100%;
+        background-color: #CEDAEF;
+        color: #666666;
+        height: 30px;
+        font-size: 14px;
+        font-family: 'Noto Sans KR', sans-serif;
+        font-weight: 700;
+      }
+      .th.sub {
+        width: 50%;
+      }
+    }
+  }
+
+  > ol {
+    > li {
+      font-weight: 400;
+      > ul {
+        padding: 5px 0 0 10px;
+        > li {
+          padding-bottom: 12px;
           > span {
-            display: inline-block;
-            width: 50%;
-            border-bottom: 1px solid #FAFAFA;
-            :first-child {
-              border-right: 1px solid #FAFAFA;
+            font-size: 14px;
+            color: #999999;
+            font-weight: 200;
+          }
+          > p {
+            color: #999999;
+            font-weight: 400;
+            padding-bottom: 5px;
+          }
+          .title {
+            text-align: start;
+            font-size: 14px;
+            ::before {
+              content: '';
+              display: inline-block;
+              width: 3px;
+              height: 3px;
+              background-color: #999999;
+              margin: 5px;
+              border-radius: 50%;
+            }
+          }
+          .comment {
+            font-size: 10px;
+          }
+          table {
+            border: 1px solid #FAFAFA;
+            td, th {
+              height: 30px;
+              text-align: center;
+              font-size: 14px;
+              border-bottom: 1px solid #FAFAFA;
+              vertical-align: middle;
+            }
+            th {
+              background-color: #CEDAEF;
+              font-family: 'Noto Sans KR', sans-serif;
+              color: #666666;
+              :first-child {
+                border-right: 1px solid #FAFAFA;
+              }
             }
           }
         }
@@ -203,59 +280,148 @@ const BottmSheet = () => {
           <li>해지 또는 취소 시에도 환급보험료는 발생하지 않습니다.</li>
           <li>
             가입안내
-            <table>
-              <tr>
-                <th>보험기간</th>
-                <td>1년</td>
-              </tr>
-              <tr>
-                <th>납입방법</th>
-                <td>무료</td>
-              </tr>
-              <tr>
-                <th>가입대상 </th>
-                <td>법률상 소상공인의 상가 및 공장</td>
-              </tr>
-            </table>
+            <ul>
+              <li>
+                <p className="th">보험기간</p>
+                <p>1년</p>
+              </li>
+              <li>
+                <p className="th">납입방법</p>
+                <p>무료</p>
+              </li>
+              <li>
+                <p className="th">가입대상 </p>
+                <p>법률상 소상공인의 상가 및 공장</p>
+              </li>
+            </ul>
           </li>
           <li>
             가입예시
-            <table>
-              <tr>
-                <th>소재지</th>
-                <td>부산</td>
-              </tr>
-              <tr>
-                <th>물건</th>
-                <td>
+            <ul>
+              <li>
+                <p className="th">소재지</p>
+                <p>부산</p>
+              </li>
+              <li>
+                <p className="th">물건</p>
+                <p className="td">
                   <span>시설 및 집기</span>
                   <span>재고자산</span>
-                </td>
-              </tr>
-              <tr>
-                <th>보험가입금액(원)</th>
-                <td>
+                </p>
+              </li>
+              <li>
+                <p className="th">보험가입금액(원)</p>
+                <p className="td">
                   <span>보험가입금액</span>
                   <span>3천만원</span>
-                </td>
-                <td>
+                </p>
+                <p className="td">
                   <span>자부담</span><span>20만원</span>
-                </td>
-                <td><span>보험가입</span><span>1천만원</span></td>
-                <td><span>자부담</span><span>20만원</span></td>
-              </tr>
-              <tr>
-                <th>연간보험료(원)</th>
-                <td>
-                  <tr>
-                    <th>총액</th>
-                  </tr>
-                </td>
-                
-    
-              </tr>
-            </table>
+                </p>
+                <p className="td"><span>보험가입</span><span>1천만원</span></p>
+                <p className="td"><span>자부담</span><span>20만원</span></p>
+              </li>
+              <li>
+                <p className="th">연간보험료(원)</p>
+                <p>
+                  <ul>
+                    <li>
+                      <p className="th sub">총액</p>
+                      <p>92,200</p>
+                    </li>
+                    <li>
+                      <p className="th sub">정부지원</p>
+                      <p>74,000</p>
+                    </li>
+                    <li>
+                      <p className="th sub">자부담</p>
+                      <p>18,200</p>
+                    </li>
+                  </ul>
+                  
+                </p>
+              </li>
+            </ul>
+            <ul className="dashed-list">
+              <li>-2021. 01월 기준 1년 보험료 / 건물급수 1급 / 6등지 /일반건물</li>
+              <li>-국가·지자체 지원 : 82% 기준<span>(지자체 별로 월별 지원비율 상이)</span></li>
+              <li>-지역별(시군구) / 건물주고 및 급수에 따라 보험료가 달라집니다.</li>
+              <li>-이 상품은 순수 보장성 상품으로 만기 시 환급금이 없습니다.</li>
+            </ul>
           </li>
+        </InfoTextBox>
+        <InfoTitleBox>꼭 알아두셔야 할 사항</InfoTitleBox>
+        <InfoTextBox>
+          <ol>
+            <li>
+              1. 상품안내
+              <ul>
+                <li>
+                  <p>1)자연재해 사고 보장</p>
+                  <span>
+                    8대 자연재해<br />
+                    (태풍, 홍수, 호우, 해일, 강풍, 풍랑, 대설, 지진)<br />
+                    사고 발생시 실손비용 보상
+                  </span>
+                </li>
+                <li>
+                  <p>2) 일부 보험료를 정부에서 지원</p>
+                  <span>
+                    국가 및 지방자치단체에서 보험료의 일부를 지원<br />
+                    (최소 70% 지원. 지방자지단체별 추가 지원 다름)
+                  </span>
+                </li>
+                <li>
+                  <p>3) 순수 보장성 상품으로 만기시 환급금 없음</p>
+                </li>
+              </ul>
+            </li>
+            <li>
+              2.보장내용
+              <ul>
+                <li>
+                  <p>1)풍수해</p>
+                  <p className="title">기상청 특보 발표 기준</p>
+                  <table>
+                    <tr>
+                      <th colSpan={2}>구분</th>
+                      <th>내용</th>
+                    </tr>
+                    <tr>
+                      <th colSpan={2}>태풍</th>
+                      <td>태풍으로 인하여 강풍,풍량,호우,폭풍해일 현상 등이 주의보 기준에 도달할 것으로 예상될 때</td>
+                    </tr>
+                    <tr>
+                      <th colSpan={2}>호우</th>
+                      <td>3시간 강우량 50mm이상 예상되거나 12시간 강우량이 110mm이상 예상될 때</td>
+                    </tr>
+                    <tr>
+                      <th colSpan={2}>강풍</th>
+                      <td>육상에서 12m/s 이상 또는 순산풍속 20m/s 이상이 될 때. 단, 산지는 풍속이 17m/ 이상 또는 순간풍속 25m/s 이상이 예상될 때</td>
+                    </tr>
+                    <tr>
+                      <th rowSpan={2} style={{width: '35px'}}>해일</th>
+                      <th style={{width: '35px'}}>폭풍해일</th>
+                      <td>천문조, 폭풍, 저기압 등의 복합적인 영향으로 해수면이 상승하여 발효기준값 이상이 예상될 때. 다만, 발효기준값은 지역별로 별도 지정</td>
+                    </tr>
+                    <tr>
+                      <th>지진해일</th>
+                      <td>천문조, 폭풍, 저기압 등의 복합적인 영향으로 해수면이 상승하여 발효기준값 이상이 예상될 때. 다만, 발효기준값은 지역별로 별도 지정</td>
+                    </tr>
+                  </table>
+                  <p className="comment">※ 향후, 기상청 특보 발표기준 등이 변경되면 풍수해보험의 보상하는 재해기준도 동일하게 적용</p>
+                </li>
+                <li>
+                  <p className="title">보장내용</p>
+                  <ul>
+                    <li>
+                      -일반물건
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ol>
         </InfoTextBox>
       </Info>
     </BottomSheetWrap>

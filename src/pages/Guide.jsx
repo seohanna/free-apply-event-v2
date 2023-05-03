@@ -17,8 +17,6 @@ const Banner = styled.div`
     position: relative;
     padding: 0 28px;
   }
-
- 
 `;
 
 const TextGroup = styled.div`
