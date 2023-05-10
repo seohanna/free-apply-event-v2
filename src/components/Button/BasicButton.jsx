@@ -14,9 +14,9 @@ const ButtonWrap = styled.div`
 `;
 
 
-const Button = ({children}) => {
+const Button = ({children, onClick, disabled}) => {
   return (
-    <ButtonWrap>
+    <ButtonWrap onClick={onClick} disabled={disabled}>
       {children}
     </ButtonWrap>
   )

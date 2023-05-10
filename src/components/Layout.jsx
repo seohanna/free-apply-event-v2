@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const Wrap = styled.div`
   display: flex;
@@ -11,13 +11,20 @@ const Wrap = styled.div`
 const Content = styled.div`
   width: 768px;
   position: relative;
+
+  ${props => props.apply && css`
+    padding: 20px;
+    margin: 20px 0;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+  `}
 `;
 
 
-const Layout = ({children}) => {
+const Layout = ({children, apply}) => {
   return (
     <Wrap>
-      <Content>
+      <Content apply={apply}>
         {children}
       </Content>
     </Wrap>
