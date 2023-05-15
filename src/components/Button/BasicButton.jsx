@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const ButtonWrap = styled.div`
@@ -11,13 +12,18 @@ const ButtonWrap = styled.div`
   font-weight: 700;
   text-align: center;
   line-height: 50px;
+  > a {
+    color: inherit;
+    font-weight: inherit;
+    font-size: inherit;
+  }
 `;
 
 
-const Button = ({children, onClick, disabled}) => {
+const Button = ({children, onClick, disabled, link}) => {
   return (
     <ButtonWrap onClick={onClick} disabled={disabled}>
-      {children}
+      {link ? (<Link to={link}>{children}</Link>) : children}
     </ButtonWrap>
   )
 }

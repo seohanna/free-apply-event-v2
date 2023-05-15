@@ -3,6 +3,7 @@ import Layout from "../components/Layout";
 import styled from "styled-components";
 import windstorm from '../assets/img/windstorm.png';
 import BottmSheet from "../components/BottomSheet";
+import { useSearchParams } from "react-router-dom";
 
 const Banner = styled.div`
   width: 375px;
@@ -45,20 +46,22 @@ const ImageGroup = styled.div`
 
 
 const Guide = () => {
-    return (
-      <Layout>
-        <Banner>
-          <div>
-            <TextGroup>
-              <p>소상공인 안전지킴이</p>
-              <h2>풍수해보험</h2>
-            </TextGroup>
-            <ImageGroup />
-          </div>
-        </Banner>
-        <BottmSheet />
-      </Layout>
-    )
+  const [searchParams, setSearchParams] = useSearchParams();
+  const jehuCd = searchParams.get('jehuCd');
+  return (
+    <Layout>
+      <Banner>
+        <div>
+          <TextGroup>
+            <p>소상공인 안전지킴이</p>
+            <h2>풍수해보험</h2>
+          </TextGroup>
+          <ImageGroup />
+        </div>
+      </Banner>
+      <BottmSheet jehuCd={jehuCd}/>
+    </Layout>
+  )
 }
 
 export default Guide

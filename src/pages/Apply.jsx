@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import { useFormContext } from "react-hook-form";
@@ -13,9 +13,11 @@ import MsmeCheckList from "../components/MsmeCheckList";
 import AddressInput from "../components/Input/AddressInput";
 import SelectInput from "../components/Input/SelectInput";
 import { business_owner, data } from "../data/business_type";
+import Button from "../components/Button/BasicButton";
 
 const ApplyWrap = styled.div`
   padding-top: 20px;
+  
 `;
 
 const Header = styled.div`
@@ -89,15 +91,36 @@ const NonLabel = styled.div`
   }
 `;
 
+const ButtonGroup = styled.div`
+  padding: 30px 0px;
+  div:first-child {
+    margin-bottom: 10px;
+  }
+`;
+
+
 const Apply = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const jehuCd = searchParams.get('jehuCd');
   const [showMsme, setShowMsme] = useState(false);
   const [checked, setChecked] = useState(false);
+  const [jehuImage, setJehuImage] = useState('');
   const { watch, setValue } = useFormContext({
     mode: 'all'
   });
 
+  useEffect(() => {
+    console.log(jehuCd)
+    switch (jehuCd) {
+      case 'yanolja_f' : 
+        setJehuImage(yanolja);
+        break;
+      case 'lottecard_f' :
+        setJehuImage(insurobo);
+        break;
+      default: 
+    }
+  }, [])
   const openMsmeCheckList = () => {
     setShowMsme(true)
     console.log(watch('msme'))
@@ -143,11 +166,7 @@ const Apply = () => {
               </>
             ) : (
             <>
-              <Logo
-                style={{
-                  backgroundImage: `url(${jehuCd === 'lottecard_f' ? insurobo : 'yanolja_f' ? yanolja : ''})`
-                }}
-              /> 
+              <Logo style={{backgroundImage: `url(${jehuImage})`}} /> 
               <Title>
                 <span>소상공인</span>
                 풍수해보험 무료가입신청서
@@ -219,6 +238,10 @@ const Apply = () => {
             name='business_owner'
             options={business_owner} 
           />
+          <ButtonGroup>
+            <Button>알아두실 사항 확인하기</Button>
+            <Button>가입신청</Button>
+          </ButtonGroup>         
         </ApplyWrap>
       </>
     )}
