@@ -1,5 +1,6 @@
 import React from "react";
 import styled, { css } from "styled-components";
+import ScrollToTop from "./ScrollToTop";
 
 const Wrap = styled.div`
   display: flex;
@@ -23,11 +24,15 @@ const Content = styled.div`
 
 const Layout = ({children, apply}) => {
   return (
-    <Wrap>
-      <Content apply={apply}>
-        {children}
-      </Content>
-    </Wrap>
+    <>
+      <ScrollToTop />
+      <Wrap>
+        <Content apply={apply}>
+          {children}
+        </Content>
+      </Wrap>
+    </>
+    
   )
 }
 

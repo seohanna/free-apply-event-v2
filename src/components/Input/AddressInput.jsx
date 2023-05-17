@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import { useFormContext } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import Input from './Input';
 import searchIcon from '../../assets/icon/searchIcon.png';
+import DaumPostcode from 'react-daum-postcode';
+import Modal from '../Modal';
 
 const InputWrap = styled.div`
   width: 100%;
@@ -68,18 +70,66 @@ const ErrorText = styled.p`
 `;
 
 
-const AddressInput = ({ onClick }) =>  {
-  const { register, watch, setError, formState: { errors } } = useFormContext({
+const AddressInput = () =>  {
+  const [isOpenPost, setIsOpenPost] = useState(false);
+  const el = useRef();
+  const { register, trigger, setValue, formState: { errors } } = useFormContext({
     mode: 'onBlur',
   });
 
+  const postCodeStyle = { 
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    top: '5%',
+    left: '0%'
+  };
+
+  const onChangeOpenPost = () => {
+    setIsOpenPost(true);
+  };
+  const closePostCode = () => {
+    setIsOpenPost(false)
+  }
+
+  const onCompletePost = (data) => {
+    let fullAddr = data.address;
+    let extraAddr = ''; 
+    if (data.addressType === 'R') {
+      if (data.bname !== '') {
+        extraAddr += data.bname;
+      }
+      if (data.buildingName !== '') {
+        extraAddr += (extraAddr !== '' ? `, ${data.buildingName}` : data.buildingName);
+      }
+        fullAddr += (extraAddr !== '' ? ` (${extraAddr})` : '');
+    }
+      
+    console.log(fullAddr)
+    console.log(data.zonecode)
+    setValue('address', fullAddr);
+    // trigger('address')
+    closePostCode();
+
+    // window.addEventListener("click", modalOutSideClick);
+    //   return () => {
+    // window.removeEventListener("click", modalOutSideClick);
+    // }
+  }
+
+  // const modalOutSideClick = (e) => {
+  //   if (isOpenPost && (!el.current || !el.current.contains(e.target))) setIsOpenPost(false);
+  // }
+
   return (
+    <>
     <InputWrap>
       <Label>목적물 소재지</Label>
-      <SearchInput onClick={onClick}>
+      <SearchInput onClick={onChangeOpenPost}>
         <input
           type='text'
           placeholder='도로명주소,건물명또는 지번입력'
+          readOnly
           {...register('address', {
             required: '*필수입력사항입니다.'
           })}
@@ -99,6 +149,16 @@ const AddressInput = ({ onClick }) =>  {
       />
     </InputWrap>
     
+    {isOpenPost  ? (
+      <Modal>
+        <DaumPostcode 
+          style={postCodeStyle} 
+          autoClose 
+          onComplete={onCompletePost} 
+        />
+      </Modal>
+    ) : null}
+    </>
   )
 }
 export default AddressInput

@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import Button from "../Button/BasicButton";
+import { useSearchParams } from "react-router-dom";
 
 const BottomSheetWrap = styled.div`
   background-color: #FFFFFF;
@@ -9,6 +10,12 @@ const BottomSheetWrap = styled.div`
   margin: 0 auto;
   transform: translateY(-39px);
   padding: 57px 28px 30px;
+
+  ${props => props.frip && css`
+    transform: translateY(0);
+    border-radius: 0;
+    padding: 20px 28px 30px;
+  `}
 `;
 
 const Title = styled.div`
@@ -37,6 +44,7 @@ const TextBox = styled.div`
   }
   > p {
     font-size: 14px;
+    white-space: pre;
   }
 
   > div {
@@ -116,15 +124,23 @@ const InfoTextBox = styled.ul`
         }
       }
     }
+    .disc {
+      padding-left: 10px;
+      > p {
+        color: #999999;
+      }
+      
+    }
     > ul {
       width: 100%;
-      border: 1px solid #FAFAFA;
       margin-top: 5px;
+      &.border-box {
+        border: 1px solid #FAFAFA;
+      }
       > li {
         display: flex;
         flex-direction: column;
         > p {
-          display: block;
           text-align: center;
           line-height: 30px;
           width: 100%;
@@ -133,7 +149,6 @@ const InfoTextBox = styled.ul`
         
             > li {
               display: flex;
-              border-top: 1px solid #FAFAFA;
               > p {
                 width: 50%;
                 color: #999999;
@@ -174,7 +189,7 @@ const InfoTextBox = styled.ul`
 
   ${props => props.ol_list && css`
     height: 357px;
-    overflow: scroll;
+    overflow-y: scroll;
     > li {
       font-weight: 400;
       ::before {
@@ -266,16 +281,18 @@ const InfoTextBox = styled.ul`
   
 `;
 
-const BottmSheet = ({ jehuCd }) => {
+const BottmSheet = ({jehuCd, jehuText}) => {
   return (
-    <BottomSheetWrap>
+    <BottomSheetWrap frip={jehuCd === 'frip_f' ? true : false}>
       <Title>
         <h2>소상공인 전용</h2>
         <h3>풍수해보험 무료가입 EVENT!</h3>
       </Title>
       <TextBox>
         <h2>가입대상</h2>
-        <p>소상공인이면 누구나</p>
+        <p>
+          {jehuText.text1?.target}
+        </p>
       </TextBox>
       <TextBox>
         <h2>가입방법</h2>
@@ -297,33 +314,31 @@ const BottmSheet = ({ jehuCd }) => {
           </ul>
         </div>
       </TextBox>
-      <Button link={`/apply?jehuCd=${jehuCd ? jehuCd : ''}`}>무료 가입하기</Button>
+      <Button link={`/apply?jehuCd=${jehuCd}`}>무료 가입하기</Button>
       <Info>
         <InfoTitleBox>이벤트 유의사항</InfoTitleBox>
         <InfoTextBox>
           <li>
             풍수해보험이란?
-            <ul>
-              <li>국가 및 지자체에서 보험료 일부 지원하는 보험으로 행정안전부가 관장하고 민영보험사가 판매하는 정책보험으로 지진, 태풍, 홍수, 호우, 강풍 등으로 인한 사고발생 시 실손비용을 보장하는 보험</li>
-            </ul>
+            <div className="disc">
+              <p>국가 및 지자체에서 보험료 일부 지원하는 보험으로 행정안전부가 관장하고 민영보험사가 판매하는 정책보험으로 지진, 태풍, 홍수, 호우, 강풍 등으로 인한 사고발생 시 실손비용을 보장하는 보험</p>
+            </div>
           </li>
           <li>
-            <ul>
-              <li>본 상품의 보험료는 이벤트 주최사인 인슈로보가 부담합니다.</li>
-            </ul>
+            본 상품의 보험료는 이벤트 주최사인 인슈로보가 부담합니다.
           </li>
         </InfoTextBox>
         <InfoTitleBox>가입시 유의사항</InfoTitleBox>
         <InfoTextBox>
           <li>일반금융소비자는 금융상품판매업자로부터 충분한 설명을 받을 권리가 있으며 그 설명을 이해하신 후에 가입하시기 바랍니다.</li>
           <li>이 자료는 요약된 것이므로 가입 전 해당상품의 약관 및 상품설명서를 반드시 확인하세요</li>
-          <li>본 보험은 비씨카드 회원을 대상으로 현대해상화재보험에서 보장하는 “풍수해보험VI” 입니다.</li>
+          <li>본 보험은 {jehuText.text2?.target} 대상으로 현대해상화재보험에서 보장하는 “풍수해보험VI” 입니다.</li>
           <li>보험개시는 가입일로부터 익월부터 개시됩니다.</li>
           <li>가입대상이 아닌 경우 보험가입이 거절되거나 해지 시 보험계약은 취소될 수 있습니다.</li>
           <li>해지 또는 취소 시에도 환급보험료는 발생하지 않습니다.</li>
           <li>
             가입안내
-            <ul>
+            <ul className="border-box">
               <li>
                 <p className="th">보험기간</p>
                 <p>1년</p>
@@ -340,7 +355,7 @@ const BottmSheet = ({ jehuCd }) => {
           </li>
           <li>
             가입예시
-            <ul>
+            <ul className="border-box">
               <li>
                 <p className="th">소재지</p>
                 <p>부산</p>

@@ -203,7 +203,7 @@ const Apply = () => {
           <Input 
             label='휴대폰폰번호'
             name='mobile' 
-            placeholder='휴대폰번호' 
+            placeholder='본인명의 휴대폰번호 (-없이)' 
             type='text'
             require='*필수입력사항입니다.'
             maxLength={11}
