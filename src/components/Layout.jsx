@@ -18,7 +18,14 @@ const Content = styled.div`
     margin: 20px 0;
     background-color: #FFFFFF;
     border-radius: 10px;
+
+    ${props => props.theme.window.mobile} {
+      margin: 0;
+      border-radius: 0;
+    }
   `}
+
+  
 `;
 
 

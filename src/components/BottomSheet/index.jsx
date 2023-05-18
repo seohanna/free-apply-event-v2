@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled, { css } from "styled-components";
 import Button from "../Button/BasicButton";
-import { useSearchParams } from "react-router-dom";
 
 const BottomSheetWrap = styled.div`
   background-color: #FFFFFF;

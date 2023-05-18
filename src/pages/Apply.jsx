@@ -100,7 +100,7 @@ const ButtonGroup = styled.div`
 
 
 const Apply = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const jehuCd = searchParams.get('jehuCd');
   const [showMsme, setShowMsme] = useState(false);
   const [checked, setChecked] = useState(false);

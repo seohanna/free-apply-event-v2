@@ -4,8 +4,8 @@ import { useFormContext } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import Input from './Input';
 import searchIcon from '../../assets/icon/searchIcon.png';
-import DaumPostcode from 'react-daum-postcode';
-import Modal from '../Modal';
+import DaumModal from '../Modal/DaumModal';
+
 
 const InputWrap = styled.div`
   width: 100%;
@@ -77,13 +77,7 @@ const AddressInput = () =>  {
     mode: 'onBlur',
   });
 
-  const postCodeStyle = { 
-    width: '100%',
-    height: '100%',
-    position: 'absolute',
-    top: '5%',
-    left: '0%'
-  };
+  
 
   const onChangeOpenPost = () => {
     setIsOpenPost(true);
@@ -108,18 +102,18 @@ const AddressInput = () =>  {
     console.log(fullAddr)
     console.log(data.zonecode)
     setValue('address', fullAddr);
-    // trigger('address')
+    trigger('address');
     closePostCode();
 
-    // window.addEventListener("click", modalOutSideClick);
-    //   return () => {
-    // window.removeEventListener("click", modalOutSideClick);
-    // }
+    window.addEventListener("click", modalOutSideClick);
+      return () => {
+    window.removeEventListener("click", modalOutSideClick);
+    }
   }
 
-  // const modalOutSideClick = (e) => {
-  //   if (isOpenPost && (!el.current || !el.current.contains(e.target))) setIsOpenPost(false);
-  // }
+  const modalOutSideClick = (e) => {
+    if (isOpenPost && (!el.current || !el.current.contains(e.target))) setIsOpenPost(false);
+  }
 
   return (
     <>
@@ -150,13 +144,11 @@ const AddressInput = () =>  {
     </InputWrap>
     
     {isOpenPost  ? (
-      <Modal>
-        <DaumPostcode 
-          style={postCodeStyle} 
-          autoClose 
-          onComplete={onCompletePost} 
-        />
-      </Modal>
+      <DaumModal 
+        onComplete={onCompletePost}
+        onClick={modalOutSideClick}
+        onClose={closePostCode}
+      />
     ) : null}
     </>
   )

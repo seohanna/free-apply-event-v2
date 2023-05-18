@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import closeIcon from '../../assets/icon/closeIcon.png';
+import DaumPostcode from 'react-daum-postcode';
 
 const ModalOveray = styled.div`
   position: fixed;
@@ -16,11 +17,15 @@ const ModalOveray = styled.div`
 
 
 const ModalWrap = styled.div`
+  width: 500px;
+  height: 500px;
   z-index: 1000;
+  position: relative;
   margin: 0 auto;
   background-color: #FFFFFF;
   ${(props) => props.theme.window.mobile} {
-    
+    width: 100%;
+    height: 100%;
   }
 `;
 
@@ -31,31 +36,43 @@ const CloseButton = styled.button`
   background-repeat: no-repeat;
   background-position: center;
   margin-bottom: 20px;
+  position: absolute;
+  top: -40px;
+  right: 0;
 
   ${(props) => props.theme.window.mobile} {
     width: 28px;
     height: 28px;
     background-size: contain;
     margin-left: 90%;
+    z-index: 999;
+    top: 50px;
+    right: 10px;
   }
 
 `;
+const postCodeStyle = { 
+  width: '100%',
+  height: '100%',
+  position: 'absolute',
+  top: '0',
+  left: '0'
+};
 
-const Content = styled.div`
-`;
-
-function Modal({onClick, children}) {
+function DaumModal({onClick, onClose, onComplete, }) {
 
   return (
-    <ModalOveray>
+    <ModalOveray onClick={onClick}>
       <ModalWrap>
-        <CloseButton onClick={onClick} />
-        <Content>
-          {children}
-        </Content>
+        <CloseButton onClose={onClose} />
+        <DaumPostcode 
+          style={postCodeStyle} 
+          autoClose 
+          onComplete={onComplete} 
+        />
       </ModalWrap>
     </ModalOveray>
   )
 }
 
-export default Modal
+export default DaumModal
