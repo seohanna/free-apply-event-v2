@@ -14,6 +14,7 @@ import AddressInput from "../components/Input/AddressInput";
 import SelectInput from "../components/Input/SelectInput";
 import { business_owner, data } from "../data/business_type";
 import Button from "../components/Button/BasicButton";
+import RegiInput from "../components/Input/RegiInput";
 
 const ApplyWrap = styled.div`
   padding-top: 20px;
@@ -105,10 +106,18 @@ const Apply = () => {
   const [showMsme, setShowMsme] = useState(false);
   const [checked, setChecked] = useState(false);
   const [jehuImage, setJehuImage] = useState('');
-  const { watch, setValue } = useFormContext({
+  const { watch, setValue, handleSubmit } = useFormContext({
     mode: 'all'
   });
 
+  const onError = (error) => {
+    console.log(watch())
+    console.log(error);
+  }
+
+  const onSubmit = async(data) => {
+    console.log(JSON.stringify(data), data)
+  }
   useEffect(() => {
     console.log(jehuCd)
     switch (jehuCd) {
@@ -182,24 +191,7 @@ const Apply = () => {
             type='text'
             require='*필수입력사항입니다.'
           />
-          <RegiGroup>
-            <Input 
-              label='주민등록번호'
-              name='regi_birth_front' 
-              placeholder='주민번호앞자리' 
-              type='tel'
-              require='*필수입력사항입니다.'
-              maxLength={6}
-            />
-            <Dash>-</Dash>
-            <Input 
-              name='regi_birth_back' 
-              placeholder='● ● ● ● ● ●' 
-              type="password"
-              require='*필수입력사항입니다.'
-              maxLength={7}
-            />
-          </RegiGroup>
+          <RegiInput />
           <Input 
             label='휴대폰폰번호'
             name='mobile' 
@@ -215,6 +207,12 @@ const Apply = () => {
             checked={checked}
           />
           <AddressInput />
+          <Input
+            type='text'
+            placeholder='상세주소'
+            name='detail_addr'
+            require='*필수입력사항입니다.'
+          />
           <SelectInput
             label='가입업종'
             name='business_type'
@@ -224,7 +222,7 @@ const Apply = () => {
             <Input 
               name='business_number' 
               placeholder='사업자등록번호' 
-              type='number'
+              type='tel'
               require='*필수입력사항입니다.'
             />
             <Input 
@@ -240,7 +238,7 @@ const Apply = () => {
           />
           <ButtonGroup>
             <Button>알아두실 사항 확인하기</Button>
-            <Button>가입신청</Button>
+            <Button onClick={handleSubmit(onSubmit, onError)}>가입신청</Button>
           </ButtonGroup>         
         </ApplyWrap>
       </>

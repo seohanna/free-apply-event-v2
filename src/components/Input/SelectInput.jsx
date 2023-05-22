@@ -2,11 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 import { useFormContext } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
+import selectIcon from '../../assets/icon/selectIcon.png';
 
 const InputWrap = styled.div`
   width: 100%;
   position: relative;
   width: 100%;
+
   > select {
     position: relative;
     display: flex;
@@ -17,8 +19,10 @@ const InputWrap = styled.div`
     border: 1px solid #DADADA;
     border-radius: 5px;
     font-size: 13px;
-    background: none;
+ 
     color: #989898;
+    background: url(${selectIcon}) no-repeat 99%;
+    
     > option {
       width: 100%;
     }

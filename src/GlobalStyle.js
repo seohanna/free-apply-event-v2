@@ -42,8 +42,14 @@ const GlobalStyle = createGlobalStyle`
   h1, h2, h3, h4, h5, h6, th {
     font-family: 'SCoreDream';
     color: #222222;
-  } 
-    
+  }
+  select {
+    -webkit-appearance:none; /* 크롬 화살표 없애기 */
+    -moz-appearance:none; /* 파이어폭스 화살표 없애기 */
+    appearance:none /* 화살표 없애기 */
+  }
+  select::-ms-expand {display:none}
+  select:focus::-ms-value {background:inherit;color:inherit;}     
 
   html, body, div, span, applet, object, iframe,
   p, blockquote, pre,

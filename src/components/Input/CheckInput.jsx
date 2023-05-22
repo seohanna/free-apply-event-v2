@@ -75,8 +75,7 @@ const ErrorText = styled.p`
   line-height: 13px;
   padding-top: 5px;
   color: ${(props) => props.theme.color.WARNING_MESSAGE};
-  position: absolute;
-  bottom: -17px;
+
 
   ${props => props.theme.window.mobile} {
     padding-top: 0px;
@@ -93,7 +92,7 @@ const Caution = styled.span`
 const CheckInput = ({
    label, placeholder, onClick, checked
 }) =>  {
-  const { register, watch, setError, formState: { errors } } = useFormContext({
+  const { register, formState: { errors } } = useFormContext({
     mode: 'onBlur',
   });
 
@@ -109,9 +108,7 @@ const CheckInput = ({
           placeholder={placeholder}
           checked={checked}
           id='check'
-          {...register('msme', {
-            required: '필수입력사항입니다'
-          })}
+          {...register('msme')}
         />
         <label for='check'>
           소상공인여부 체크

@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import { useFormContext } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
-import Input from './Input';
 import searchIcon from '../../assets/icon/searchIcon.png';
 import DaumModal from '../Modal/DaumModal';
 
@@ -10,7 +9,7 @@ import DaumModal from '../Modal/DaumModal';
 const InputWrap = styled.div`
   width: 100%;
   position: relative;
-  margin: 20px 0;
+  margin: 20px 0 10px 0;
 
   ${props => props.theme.window.mobile} {
     margin-bottom: 20px;
@@ -58,10 +57,9 @@ const Label = styled.label`
 const ErrorText = styled.p`
   font-size: 13px;
   line-height: 13px;
-  padding-top: 5px;
+
   color: ${(props) => props.theme.color.WARNING_MESSAGE};
-  position: absolute;
-  bottom: -17px;
+ 
 
   ${props => props.theme.window.mobile} {
     padding-top: 0px;
@@ -130,15 +128,9 @@ const AddressInput = () =>  {
         />
         <SearchIcon />
       </SearchInput>
-      <Input
-        type='text'
-        placeholder='상세주소'
-        name='detail_addr'
-        require='*필수입력사항입니다.'
-      />
       <ErrorMessage
         errors={errors}
-        name='msme'
+        name='address'
         render={({message}) => <ErrorText>{message}</ErrorText>}
       />
     </InputWrap>
