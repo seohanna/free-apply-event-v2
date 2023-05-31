@@ -15,6 +15,7 @@ import SelectInput from "../components/Input/SelectInput";
 import { business_owner, data } from "../data/business_type";
 import Button from "../components/Button/BasicButton";
 import RegiInput from "../components/Input/RegiInput";
+import Modal from "../components/Modal";
 
 const ApplyWrap = styled.div`
   padding-top: 20px;
@@ -106,6 +107,8 @@ const Apply = () => {
   const [showMsme, setShowMsme] = useState(false);
   const [checked, setChecked] = useState(false);
   const [jehuImage, setJehuImage] = useState('');
+  const [knowPopup, setKnowPopup] = useState(false);
+  
   const { watch, setValue, handleSubmit } = useFormContext({
     mode: 'all'
   });
@@ -116,7 +119,12 @@ const Apply = () => {
   }
 
   const onSubmit = async(data) => {
+    
     console.log(JSON.stringify(data), data)
+  }
+
+  const knowChecking = () => {
+    
   }
   useEffect(() => {
     console.log(jehuCd)
@@ -237,10 +245,16 @@ const Apply = () => {
             options={business_owner} 
           />
           <ButtonGroup>
-            <Button>알아두실 사항 확인하기</Button>
+            <Button onClick={() => setKnowPopup(true)}>알아두실 사항 확인하기</Button>
             <Button onClick={handleSubmit(onSubmit, onError)}>가입신청</Button>
           </ButtonGroup>         
         </ApplyWrap>
+        {knowPopup && (
+          <Modal onClick={() => setKnowPopup(false)}>
+            <h2>알아두실사항</h2>
+            <button onClick={knowChecking}>확인</button>
+          </Modal>
+        )}
       </>
     )}
   </Layout>
