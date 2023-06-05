@@ -30,7 +30,7 @@ const CloseButton = styled.button`
   background-image: url(${closeIcon});
   background-repeat: no-repeat;
   background-position: center;
-  margin-bottom: 20px;
+  margin: 1% 0 0 95%;
 
   ${(props) => props.theme.window.mobile} {
     width: 28px;
@@ -42,6 +42,10 @@ const CloseButton = styled.button`
 `;
 
 const Content = styled.div`
+  > h2 {
+    font-size: 20px;
+    text-align: center;
+  }
 `;
 
 function Modal({onClick, children}) {

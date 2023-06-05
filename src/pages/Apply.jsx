@@ -72,18 +72,6 @@ const Title = styled.h1`
   }
 `;
 
-const RegiGroup = styled.div`
-  display: flex;
-  align-items: flex-end;
-
-  
-`;
-
-const Dash = styled.p`
-  align-self: center;
-  padding: 0 10px;
-`;
-
 const NonLabel = styled.div`
   > div {
     margin-bottom: 5px;
@@ -100,6 +88,21 @@ const ButtonGroup = styled.div`
   }
 `;
 
+
+
+const KnowList = styled.ul`
+  width: 700px;
+`; 
+
+
+const Guarantee = styled.table`
+  border: 1px solid #dadada;
+  border-collapse: collapse;
+  width: 70%;
+  > tr, th , td {
+    border: 1px solid #dadada;
+  }
+`;
 
 const Apply = () => {
   const [searchParams] = useSearchParams();
@@ -251,7 +254,40 @@ const Apply = () => {
         </ApplyWrap>
         {knowPopup && (
           <Modal onClick={() => setKnowPopup(false)}>
-            <h2>알아두실사항</h2>
+            <h2>알아 두실 사항</h2>
+            <KnowList>
+              <li>
+                - 보장내용
+                <Guarantee>
+                  <tr>
+                    <th>-시설/집기:</th>
+                    <td>3000</td>
+                    <td>만원</td>
+                  </tr>
+                  <tr>
+                    <th>-재고자산:</th>
+                    <td>1000</td>
+                    <td>만원</td>
+                  </tr>
+                  <tr>
+                    <th>-자기부담금:</th>
+                    <td>20</td>
+                    <td>만원</td>
+                  </tr>
+                </Guarantee>
+              </li>
+              <li>
+                - 가입자는 법률상 소상공인으로 일반물건인 경우 건물 또는 시설(비품포함)을 총 1억원 한도로 가입 가능하며, 공장물건인 경우 건물 또는 기계를 1.5억 한도까지 가입가능 합니다.
+              </li>
+              <li>
+                - 재고자산은 5천만원까지 가입이 가능합니다.
+                <p>* 재고자산 : 원/부자재, 재공품, 반제품, 제품, 부산물, 상품과 저장품 및 이와 비슷한 것</p>
+              </li>
+              <li>- 소재지와 건물구조에 따라 보험료가 달라집니다.</li>
+              <li>- 보험개시는 가입일로부터 익월부터 개시됩니다.</li>
+              <li>- 지하소재물건 및 옥외간판(건물 벽체와 분리된 입간판)의 경우 가입이 제외됩니다.</li>
+            </KnowList>
+            
             <button onClick={knowChecking}>확인</button>
           </Modal>
         )}
@@ -261,4 +297,4 @@ const Apply = () => {
   )
 }
 
-export default Apply
+export default Apply;
