@@ -19,6 +19,7 @@ const ModalWrap = styled.div`
   z-index: 1000;
   margin: 0 auto;
   background-color: #FFFFFF;
+  
   ${(props) => props.theme.window.mobile} {
     
   }

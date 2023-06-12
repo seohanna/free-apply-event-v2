@@ -25,7 +25,7 @@ const Dash = styled.div`
 
 
 const RegiInput = () => {
-	const { watch, trigger, setError } = useFormContext({
+	const { watch, trigger } = useFormContext({
 		mode: 'onBlur'
 	})
 	const juminCheck = () => {
@@ -35,22 +35,22 @@ const RegiInput = () => {
     const totalJumin = reg1+reg2
     console.log('totalJumi', totalJumin)
 
-    const arrNum1 = new Array();
-	  const arrNum2 = new Array();
+    const arrNum1 = [];
+	  const arrNum2 = [];
 
-    for (var i = 0; i < reg1.length; i++) {
+    for (let i = 0; i < reg1.length; i++) {
       arrNum1[i] = reg1.charAt(i);
     }
-    for (var i = 0; i < reg2.length; i++) {
+    for (let i = 0; i < reg2.length; i++) {
       arrNum2[i] = reg2.charAt(i);
     }
 
     var tempSum = 0;
-    for (var i = 0; i < reg1.length; i++) {
+    for (let i = 0; i < reg1.length; i++) {
       tempSum += arrNum1[i] * (2 + i);
     }
 
-    for (var i = 0; i < reg2.length - 1; i++) {
+    for (let i = 0; i < reg2.length - 1; i++) {
       if (i >= 2) {
         tempSum += arrNum2[i] * i;
       } else {
@@ -58,17 +58,13 @@ const RegiInput = () => {
       }
     }
 
-    if (arrNum2[0] == 1 ||
-      arrNum2[0] == 2 ||
-      arrNum2[0] == 3 ||
-      arrNum2[0] == 4 ||
-      arrNum2[0] == 0 ||
-      arrNum2[0] == 9) {
+    if (arrNum2[0] === 1 ||
+      arrNum2[0] === 2 ||
+      arrNum2[0] === 3 ||
+      arrNum2[0] === 4 ||
+      arrNum2[0] === 0 ||
+      arrNum2[0] === 9) {
       if ((11 - (tempSum % 11)) % 10 !== arrNum2[6]) {
-				setError('regi_birth_back', {
-					type: 'custom',
-					message: '에러발생'
-				})
         return false;
       } else {
         return true
@@ -84,7 +80,9 @@ const RegiInput = () => {
 				placeholder='주민번호앞자리' 
 				type='tel'
 				require='*필수입력사항입니다.'
-				
+        validate={{
+          reqCheck: () => juminCheck() ? true : '잘못된 주민번호 입니다.'
+        }}
 				maxLength={6}
 			/>
 			<Dash>-</Dash>
@@ -94,7 +92,7 @@ const RegiInput = () => {
 				type="password"
 				require='*필수입력사항입니다.'
 				validate={{
-					regCheck: () => juminCheck()
+					regCheck: () => juminCheck() ? trigger('regi_birth_front') : '잘못된 주민번호 입니다.'
 				}}
 				maxLength={7}
 			/>

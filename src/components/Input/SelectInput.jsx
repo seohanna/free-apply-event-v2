@@ -19,7 +19,6 @@ const InputWrap = styled.div`
     border: 1px solid #DADADA;
     border-radius: 5px;
     font-size: 13px;
- 
     color: #989898;
     background: url(${selectIcon}) no-repeat 99%;
     
@@ -42,10 +41,10 @@ const Label = styled.label`
 const ErrorText = styled.p`
   font-size: 13px;
   line-height: 13px;
-  padding-top: 5px;
+  padding-bottom: 5px;
   color: ${(props) => props.theme.color.WARNING_MESSAGE};
-  position: absolute;
-  bottom: -17px;
+  /* position: absolute;
+  bottom: -17px; */
 
   ${props => props.theme.window.mobile} {
     padding-top: 0px;
@@ -54,7 +53,7 @@ const ErrorText = styled.p`
 `;
 
 
-const SelectInput = ({name, label, options, ...rest}) =>  {
+const SelectInput = ({name, label, options, required, ...rest}) =>  {
   const { register, formState: { errors } } = useFormContext({
     mode: 'onBlur',
   });
@@ -64,7 +63,9 @@ const SelectInput = ({name, label, options, ...rest}) =>  {
       {label && (<Label>{label}</Label>)}
       <select
         name={name}
-        {...register(name)}
+        {...register(name, {
+          required: required,
+        })}
         {...rest}
       >
         {options.map(option => (

@@ -1,6 +1,6 @@
 export const data = [
   {
-    value: "0",
+    value: "",
     title: '업종을 선택하세요.'
   },
   {

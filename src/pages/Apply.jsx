@@ -14,15 +14,73 @@ import AddressInput from "../components/Input/AddressInput";
 import SelectInput from "../components/Input/SelectInput";
 import { business_owner, data } from "../data/business_type";
 import Button from "../components/Button/BasicButton";
-import RegiInput from "../components/Input/RegiInput";
+// import RegiInput from "../components/Input/RegiInput";
 import Modal from "../components/Modal";
 
 const ApplyWrap = styled.div`
   padding-top: 20px;
-  
+  input[type='checkbox'] {
+    position: absolute;
+    left: -1000%;
+    
+  }
+
+  .input-box {
+    margin-bottom: 25px;
+    > input {
+      width: 100%;
+      height: 39px;
+      padding: 7px;
+      margin-bottom: 5px;
+      border: 1px solid #DADADA;
+      border-radius: 5px;
+      font-size: 13px;
+      background: none;
+      color: #989898;
+      ::placeholder {
+        color: #DADADA;
+        font-size: 13px;
+      }
+    }
+  }
+
+  .label {
+    display: block;
+    width: 100%;
+    color: #222222;
+    font-size: 14px;
+    font-weight: 400;
+    margin-bottom: 5px;
+  }
+
+  .error-text {
+    font-size: 13px;
+    line-height: 13px;
+    padding-top: 5px;
+    color: ${(props) => props.theme.color.WARNING_MESSAGE};
+  }
 `;
 
 const Header = styled.div`
+`;
+
+const RegiInput = styled.div`
+  display: flex;
+  justify-content: space-between;
+  > div {
+    width: 48%; 
+    position: relative;
+    ::after {
+      content: '-';
+      display: block;
+      position: absolute;
+      top: 5px;
+      right: -5%;
+    }
+    :last-child::after {
+      content: none;
+    }
+  }
 `;
 
 const KBank = styled.div`
@@ -91,7 +149,26 @@ const ButtonGroup = styled.div`
 
 
 const KnowList = styled.ul`
+  padding: 20px;
   width: 700px;
+
+  > li {
+    font-size: 14px;
+    font-weight: 700;
+    margin-top: 15px;
+    > p {
+      font-size: 12px;
+
+    }
+    > input {
+      position: absolute;
+      left: -1000%;
+    }
+    label {
+      color: #FFFFFF;
+      font-weight: 700;
+    }
+  } 
 `; 
 
 
@@ -99,8 +176,18 @@ const Guarantee = styled.table`
   border: 1px solid #dadada;
   border-collapse: collapse;
   width: 70%;
-  > tr, th , td {
+  
+  
+  > tr, th, td {
     border: 1px solid #dadada;
+    font-size: 12px;
+  }
+  th {
+    font-weight: 300;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  td {
+    text-align: end;
   }
 `;
 
@@ -111,22 +198,36 @@ const Apply = () => {
   const [checked, setChecked] = useState(false);
   const [jehuImage, setJehuImage] = useState('');
   const [knowPopup, setKnowPopup] = useState(false);
-  
-  const { watch, setValue, handleSubmit } = useFormContext({
+  const [marketingPopup, setMarketingPopup] = useState(false);
+ 
+  const { watch, setValue, handleSubmit, register, formState: { errors } } = useFormContext({
     mode: 'all'
   });
 
+  useEffect(() => {console.log(watch('know_check'))}, [knowPopup])
   const onError = (error) => {
     console.log(watch())
     console.log(error);
   }
 
   const onSubmit = async(data) => {
-    
+    if (!watch('know_check')) {
+      setKnowPopup(true);
+    } else {
+      setMarketingPopup(true);
+    }
+    console.log(JSON.stringify(data), data)
+  }
+
+  const onSubmit2 = async(data) => {
+    console.log(watch())
     console.log(JSON.stringify(data), data)
   }
 
   const knowChecking = () => {
+
+    setValue('know_check', true)
+    setKnowPopup(false)
     
   }
   useEffect(() => {
@@ -145,7 +246,54 @@ const Apply = () => {
     setShowMsme(true)
     console.log(watch('msme'))
   }
+  const juminCheck = () => {
+    const reg1 = watch("regi_birth_front"); 
+    const reg2 = watch("regi_birth_back");
 
+    if (reg1 === '') {  
+      return false;
+    } else {
+      const totalJumin = reg1+reg2
+      console.log('totalJumi', totalJumin)
+
+      const arrNum1 = new Array();
+      const arrNum2 = new Array();
+
+      for (var i = 0; i < reg1.length; i++) {
+        arrNum1[i] = reg1.charAt(i);
+      }
+      for (var i = 0; i < reg2.length; i++) {
+        arrNum2[i] = reg2.charAt(i);
+      }
+
+      var tempSum = 0;
+      for (var i = 0; i < reg1.length; i++) {
+        tempSum += arrNum1[i] * (2 + i);
+      }
+
+      for (var i = 0; i < reg2.length - 1; i++) {
+        if (i >= 2) {
+          tempSum += arrNum2[i] * i;
+        } else {
+          tempSum += arrNum2[i] * (8 + i);
+        }
+      }
+
+      if (arrNum2[0] == 1 ||
+        arrNum2[0] == 2 ||
+        arrNum2[0] == 3 ||
+        arrNum2[0] == 4 ||
+        arrNum2[0] == 0 ||
+        arrNum2[0] == 9) {
+        if ((11 - (tempSum % 11)) % 10 !== arrNum2[6]) {
+          return false;
+        } else {
+          return true
+        }
+      }
+    }
+    
+  }
   const msmeValidate = () => {
     if (watch('MsmeCheck1') === 'yes' && watch('MsmeCheck2') === 'yes' && watch('MsmeCheck3') === 'yes') {
       setChecked(true);
@@ -202,15 +350,52 @@ const Apply = () => {
             type='text'
             require='*필수입력사항입니다.'
           />
-          <RegiInput />
-          <Input 
-            label='휴대폰폰번호'
-            name='mobile' 
-            placeholder='본인명의 휴대폰번호 (-없이)' 
-            type='text'
-            require='*필수입력사항입니다.'
-            maxLength={11}
-          />
+          <label className="label">주민등록번호</label>
+          <RegiInput>
+            <div className="input-box">
+              <input 
+                type='number' 
+                name='regi_birth_front'
+                placeholder="주민번호 앞자리"
+                {...register('regi_birth_front', {
+                  required: '*필수입력사항입니다.'
+                })} 
+              />
+              <p className="error-text">{errors.regi_birth_front?.message}</p>
+            </div>
+            <div className="input-box">
+              <input
+                type='password'
+                placeholder="주민번호 뒷자리"
+                name='regi_birth_back'
+                // {...register('regi_birth_back', {
+                //   required: '*필수 입력 항목입니다.',
+                //   validate: {
+                //     regCheck: () => juminCheck() ? true : '잘못된 주민번호 입니다.'
+                //   }
+                // })}
+              />
+              <p className="error-text">{errors.regi_birth_back?.message}</p>
+            </div>
+          </RegiInput>
+            
+            
+          <div className="input-box">
+            <label className="label">휴대폰번호</label>
+            <input
+              type='phone'
+              placeholder="휴대폰번호"
+              {...register('mobile', {
+                required: '*필수 입력 항목입니다.',
+                pattern : {
+                  value: /^((01[1|6|7|8|9])[1-9]+[0-9]{6,7})|(010[1-9][0-9]{7})$/,
+                  message: '잘못된 전화번호 입니다.'
+                }
+              })}
+            />
+            <p className="error-text">{errors.mobile?.message}</p>
+          </div>
+          
           <CheckInput
             label='법률상 소상공인'
             placeholder='소상공인여부 체크'
@@ -227,7 +412,8 @@ const Apply = () => {
           <SelectInput
             label='가입업종'
             name='business_type'
-            options={data} 
+            options={data}
+            required='*필수선택사항입니다.'
           />
           <NonLabel>
             <Input 
@@ -245,8 +431,10 @@ const Apply = () => {
           </NonLabel>
           <SelectInput
             name='business_owner'
-            options={business_owner} 
+            options={business_owner}
+            required='*필수선택사항입니다.'
           />
+          <input type='checkbox' {...register('know_check')} />
           <ButtonGroup>
             <Button onClick={() => setKnowPopup(true)}>알아두실 사항 확인하기</Button>
             <Button onClick={handleSubmit(onSubmit, onError)}>가입신청</Button>
@@ -260,17 +448,17 @@ const Apply = () => {
                 - 보장내용
                 <Guarantee>
                   <tr>
-                    <th>-시설/집기:</th>
+                    <th>-시설/집기 :</th>
                     <td>3000</td>
                     <td>만원</td>
                   </tr>
                   <tr>
-                    <th>-재고자산:</th>
+                    <th>-재고자산 :</th>
                     <td>1000</td>
                     <td>만원</td>
                   </tr>
                   <tr>
-                    <th>-자기부담금:</th>
+                    <th>-자기부담금 :</th>
                     <td>20</td>
                     <td>만원</td>
                   </tr>
@@ -286,9 +474,38 @@ const Apply = () => {
               <li>- 소재지와 건물구조에 따라 보험료가 달라집니다.</li>
               <li>- 보험개시는 가입일로부터 익월부터 개시됩니다.</li>
               <li>- 지하소재물건 및 옥외간판(건물 벽체와 분리된 입간판)의 경우 가입이 제외됩니다.</li>
+              <li>
+                <Button onClick={knowChecking}>확인</Button>
+              </li>
+              
             </KnowList>
-            
-            <button onClick={knowChecking}>확인</button>
+          </Modal>
+        )}
+        {marketingPopup && (
+          <Modal>
+            <input
+              type='phone'
+              placeholder="휴대폰번호"
+              {...register('test1', {
+                required: '*필수 입력 항목입니다.',
+                pattern : {
+                  value: /^((01[1|6|7|8|9])[1-9]+[0-9]{6,7})|(010[1-9][0-9]{7})$/,
+                  message: '잘못된 전화번호 입니다.'
+                }
+              })}
+            />
+            <input
+              type='phone'
+              placeholder="휴대폰번호"
+              {...register('test2', {
+                required: '*필수 입력 항목입니다.',
+                pattern : {
+                  value: /^((01[1|6|7|8|9])[1-9]+[0-9]{6,7})|(010[1-9][0-9]{7})$/,
+                  message: '잘못된 전화번호 입니다.'
+                }
+              })}
+            />
+            <Button onClick={handleSubmit(onSubmit2, onError)}>가입신청</Button>
           </Modal>
         )}
       </>
