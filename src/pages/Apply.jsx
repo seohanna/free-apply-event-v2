@@ -16,6 +16,7 @@ import { business_owner, data } from "../data/business_type";
 import Button from "../components/Button/BasicButton";
 // import RegiInput from "../components/Input/RegiInput";
 import Modal from "../components/Modal";
+import AllCheckBox from "../components/Input/AllCheckBox";
 
 const ApplyWrap = styled.div`
   padding-top: 20px;
@@ -191,6 +192,12 @@ const Guarantee = styled.table`
   }
 `;
 
+const MarketingPopupWrap = styled.div`
+  padding: 20px;
+  width: 768px;
+  overflow-y: scroll;
+`;
+
 const Apply = () => {
   const [searchParams] = useSearchParams();
   const jehuCd = searchParams.get('jehuCd');
@@ -204,7 +211,8 @@ const Apply = () => {
     mode: 'all'
   });
 
-  useEffect(() => {console.log(watch('know_check'))}, [knowPopup])
+  useEffect(() => {console.log(watch('know_check'))}, [knowPopup]);
+
   const onError = (error) => {
     console.log(watch())
     console.log(error);
@@ -294,6 +302,7 @@ const Apply = () => {
     }
     
   }
+
   const msmeValidate = () => {
     if (watch('MsmeCheck1') === 'yes' && watch('MsmeCheck2') === 'yes' && watch('MsmeCheck3') === 'yes') {
       setChecked(true);
@@ -436,7 +445,7 @@ const Apply = () => {
           />
           <input type='checkbox' {...register('know_check')} />
           <ButtonGroup>
-            <Button onClick={() => setKnowPopup(true)}>알아두실 사항 확인하기</Button>
+            <Button onClick={() => setKnowPopup(true)} disabled={watch('know_check') ? false : true}>알아두실 사항 확인하기</Button>
             <Button onClick={handleSubmit(onSubmit, onError)}>가입신청</Button>
           </ButtonGroup>         
         </ApplyWrap>
@@ -482,30 +491,11 @@ const Apply = () => {
           </Modal>
         )}
         {marketingPopup && (
-          <Modal>
-            <input
-              type='phone'
-              placeholder="휴대폰번호"
-              {...register('test1', {
-                required: '*필수 입력 항목입니다.',
-                pattern : {
-                  value: /^((01[1|6|7|8|9])[1-9]+[0-9]{6,7})|(010[1-9][0-9]{7})$/,
-                  message: '잘못된 전화번호 입니다.'
-                }
-              })}
-            />
-            <input
-              type='phone'
-              placeholder="휴대폰번호"
-              {...register('test2', {
-                required: '*필수 입력 항목입니다.',
-                pattern : {
-                  value: /^((01[1|6|7|8|9])[1-9]+[0-9]{6,7})|(010[1-9][0-9]{7})$/,
-                  message: '잘못된 전화번호 입니다.'
-                }
-              })}
-            />
-            <Button onClick={handleSubmit(onSubmit2, onError)}>가입신청</Button>
+          <Modal onClick={() => setMarketingPopup(false)}>
+            <MarketingPopupWrap>
+              <AllCheckBox />
+              <Button onClick={handleSubmit(onSubmit2, onError)}>가입신청</Button>
+            </MarketingPopupWrap>
           </Modal>
         )}
       </>

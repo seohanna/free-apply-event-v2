@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const ButtonWrap = styled.div`
   width: 100%;
@@ -17,6 +17,10 @@ const ButtonWrap = styled.div`
     font-weight: inherit;
     font-size: inherit;
   }
+
+  ${props => props.disabled && css`
+    opacity: 0.3;
+  `} 
 `;
 
 
