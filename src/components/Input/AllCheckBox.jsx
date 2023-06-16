@@ -76,8 +76,6 @@ const ErrorText = styled.p`
   line-height: 13px;
   padding-top: 5px;
   color: ${(props) => props.theme.color.WARNING_MESSAGE};
-  position: absolute;
-  top: 60px;
 
   ${props => props.theme.window.mobile} {
     padding-top: 0px;
@@ -180,87 +178,87 @@ const Info = styled.div`
 `;
 
 const AllCheckBox = (props) => {
-  const {register, setValue, formState: { errors }} = useFormContext();
-  const [allFlag, setAllFlag] = useState(false);
-  const [termsFlag, setTermsFlag] = useState([false,false,false,false]);
+  const {register, watch, formState: { errors }} = useFormContext({
+    mode: 'onClick'
+  });
   const [activeIndex, setActiveIndex] = useState();
-
-  const toggleCheck = (e, index) => {
-    setTermsFlag((prev) => {
-      const arr = { ...prev };
-      arr[index] = !prev[index];
-        return arr;
-    });
-  };
-
-  const selectAll = (e) => {
-    setAllFlag(e.target.checked);
-    setValue('use_agree', true)
-    setValue('marketing_yn', true)
-    setTermsFlag((prev) => {
-      Object.keys(prev).map((item) => prev[item] = e.target.checked)
-      return {
-          ...prev
-      }
-    });
-  };
-
+  const [checkItems, setCheckItems] = useState([]);
   useEffect(() => {
-    let allChecked = false;
-    if (Object.values(termsFlag).every((item) => item)) {
-      allChecked = true;
+    watch('')
+  })
+  const handleSingleCheck = (checked, id) => {
+    if (checked) {
+      setCheckItems(prev => [...prev, id]);
+      
+    } else {
+      setCheckItems(checkItems.filter((el) => el !== id));
+      watch('')
     }
-    setAllFlag(allChecked);
-  },[termsFlag])
+  }
 
+  const handleAllCheck = (checked) => {
+    if (checked) {
+      const idArray = [];
+      marketingData.forEach((el) => idArray.push(el.id));
+      setCheckItems(idArray);
+    } else {
+      setCheckItems([]);
+    }
+  }
 
   const activeMethod = (id) => {
     setActiveIndex(id)
-    
   }
 
   return (
     <>
       <CheckBoxGroup>
         <AllChecked>
-          <input type="checkbox" checked={allFlag} {...register('all')} onChange={selectAll} id='all'/>
+          <input type="checkbox" 
+            checked={checkItems.length === marketingData.length ? true : false}
+            onClick={(e) => handleAllCheck(e.target.checked)}  id='all'/>
           <label for='all'>전체 약관 동의</label>
         </AllChecked>
         <SelectChecked className="accordion">
-          {marketingData.map((item, index) => {
+          {marketingData.map((item) => {
             return (
+              <>
               <li key={item.id}>
                 <div>
                   <div>
                     <input 
                       type="checkbox" 
                       id={item.label}
-                      checked={termsFlag[item.id]}
+                      checked={checkItems.includes(item.id) ? true : false}
                       {...register(item.name, {
-                        required: {
-                          value: item.required,
-                          message: item.message
-                        }
+                        required: item.required
                       })}
-                      onChange={(e) => toggleCheck(e, index)}  
+                      onClick={(e) => handleSingleCheck(e.target.checked, item.id)}
+                      
                     />
                     <label for={item.label}>{item.title}</label>
                   </div>
                   <div className='button' onClick={() => activeMethod(item.id)}>보기</div>
                 </div>
-                <Info >
+                <Info>
                   <div
                     className={item.id === activeIndex ? '' : 'closed' }
                     dangerouslySetInnerHTML={{__html: item.textArea }} />
                 </Info>           
               </li>
+              <>
+                {item.required && (
+                <ErrorMessage
+                errors={errors}
+                name={item.name}
+                render={({message}) => <ErrorText>{message}</ErrorText>}
+              />
+              )}
+              </>
+              </>
             )})}
           </SelectChecked>
-          <ErrorMessage
-            errors={errors}
-            name={'use_agree'}
-            render={({message}) => <ErrorText>{message}</ErrorText>}
-          />
+          
         </CheckBoxGroup>
       </>
     )

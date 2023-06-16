@@ -207,7 +207,7 @@ const Apply = () => {
   const [knowPopup, setKnowPopup] = useState(false);
   const [marketingPopup, setMarketingPopup] = useState(false);
  
-  const { watch, setValue, handleSubmit, register, formState: { errors } } = useFormContext({
+  const { watch, setValue, handleSubmit, register, setError, trigger, formState: { errors } } = useFormContext({
     mode: 'all'
   });
 
@@ -249,60 +249,80 @@ const Apply = () => {
         break;
       default: 
     }
-  }, [])
+  }, []);
+
   const openMsmeCheckList = () => {
     setShowMsme(true)
     console.log(watch('msme'))
   }
+
+  // 주민등록번호 유효성 검사
   const juminCheck = () => {
     const reg1 = watch("regi_birth_front"); 
     const reg2 = watch("regi_birth_back");
+    const totalJumin = reg1+reg2
+    console.log('totalJumi', totalJumin)
 
-    if (reg1 === '') {  
-      return false;
-    } else {
-      const totalJumin = reg1+reg2
-      console.log('totalJumi', totalJumin)
+    const arrNum1 = new Array();
+	  const arrNum2 = new Array();
 
-      const arrNum1 = new Array();
-      const arrNum2 = new Array();
+    for (var i = 0; i < reg1.length; i++) {
+      arrNum1[i] = reg1.charAt(i);
+    }
+    for (var i = 0; i < reg2.length; i++) {
+      arrNum2[i] = reg2.charAt(i);
+    }
 
-      for (var i = 0; i < reg1.length; i++) {
-        arrNum1[i] = reg1.charAt(i);
-      }
-      for (var i = 0; i < reg2.length; i++) {
-        arrNum2[i] = reg2.charAt(i);
-      }
+    var tempSum = 0;
+    for (var i = 0; i < reg1.length; i++) {
+      tempSum += arrNum1[i] * (2 + i);
+    }
 
-      var tempSum = 0;
-      for (var i = 0; i < reg1.length; i++) {
-        tempSum += arrNum1[i] * (2 + i);
-      }
-
-      for (var i = 0; i < reg2.length - 1; i++) {
-        if (i >= 2) {
-          tempSum += arrNum2[i] * i;
-        } else {
-          tempSum += arrNum2[i] * (8 + i);
-        }
-      }
-
-      if (arrNum2[0] == 1 ||
-        arrNum2[0] == 2 ||
-        arrNum2[0] == 3 ||
-        arrNum2[0] == 4 ||
-        arrNum2[0] == 0 ||
-        arrNum2[0] == 9) {
-        if ((11 - (tempSum % 11)) % 10 !== arrNum2[6]) {
-          return false;
-        } else {
-          return true
-        }
+    for (var i = 0; i < reg2.length - 1; i++) {
+      if (i >= 2) {
+        tempSum += arrNum2[i] * i;
+      } else {
+        tempSum += arrNum2[i] * (8 + i);
       }
     }
-    
+
+    if (arrNum2[0] == 1 ||
+      arrNum2[0] == 2 ||
+      arrNum2[0] == 3 ||
+      arrNum2[0] == 4 ||
+      arrNum2[0] == 0 ||
+      arrNum2[0] == 9) {
+      if ((11 - (tempSum % 11)) % 10 != arrNum2[6]) {
+        return false;
+      } else {
+        return true
+      }
+    }
   }
 
+  // 사업자등록번호 유효성검사
+  const validateBizNum = (value) => {
+    var number = value
+    console.log(value)
+    var numberMap = number.replace(/-/gi, '').split('').map(function (d){
+      return parseInt(d, 10);
+    });
+
+    if(numberMap.length === 10){
+      var keyArr = [1, 3, 7, 1, 3, 7, 1, 3, 5];
+      var chk = 0;
+  
+      keyArr.forEach(function(d, i){
+        chk += d * numberMap[i];
+      });
+  
+      chk += parseInt((keyArr[8] * numberMap[8])/ 10, 10);
+      return Math.floor(numberMap[9]) === ( (10 - (chk % 10) ) % 10);
+    }
+    return false;
+  }
+
+  // 소상공인여부 체크리스트 확인
   const msmeValidate = () => {
     if (watch('MsmeCheck1') === 'yes' && watch('MsmeCheck2') === 'yes' && watch('MsmeCheck3') === 'yes') {
       setChecked(true);
@@ -363,11 +383,14 @@ const Apply = () => {
           <RegiInput>
             <div className="input-box">
               <input 
-                type='number' 
+                type='phone' 
                 name='regi_birth_front'
                 placeholder="주민번호 앞자리"
                 {...register('regi_birth_front', {
-                  required: '*필수입력사항입니다.'
+                  required: '*필수입력사항입니다.',
+                  validate: {
+                    regCheck: () => juminCheck() ? true : '잘못된 주민번호 입니다.'
+                  }
                 })} 
               />
               <p className="error-text">{errors.regi_birth_front?.message}</p>
@@ -377,13 +400,14 @@ const Apply = () => {
                 type='password'
                 placeholder="주민번호 뒷자리"
                 name='regi_birth_back'
-                // {...register('regi_birth_back', {
-                //   required: '*필수 입력 항목입니다.',
-                //   validate: {
-                //     regCheck: () => juminCheck() ? true : '잘못된 주민번호 입니다.'
-                //   }
-                // })}
+                {...register('regi_birth_back', {
+                  required: '*필수 입력 항목입니다.',
+                  validate: {
+                    regCheck: () => juminCheck() ? trigger('regi_birth_front') : '잘못된 주민번호 입니다.'
+                  }
+                })}
               />
+
               <p className="error-text">{errors.regi_birth_back?.message}</p>
             </div>
           </RegiInput>
@@ -407,7 +431,6 @@ const Apply = () => {
           
           <CheckInput
             label='법률상 소상공인'
-            placeholder='소상공인여부 체크'
             onClick={openMsmeCheckList}
             checked={checked}
           />
@@ -430,6 +453,9 @@ const Apply = () => {
               placeholder='사업자등록번호' 
               type='tel'
               require='*필수입력사항입니다.'
+              validate={{
+                check: (value) => validateBizNum(value) ? true : '유효하지 않은 사업자등록번호입니다'
+              }}
             />
             <Input 
               name='business_name' 

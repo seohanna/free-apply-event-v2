@@ -42,7 +42,7 @@ const CheckGroup = styled.div`
     justify-content: space-between;
     align-items: center;
     font-size: 14px;
-    color: #DADADA;
+    
     ::after {
       content: '';
       display: block;
@@ -105,7 +105,6 @@ const CheckInput = ({
         <input
           name='msme'
           type='checkbox'
-          placeholder={placeholder}
           checked={checked}
           id='check'
           {...register('msme')}

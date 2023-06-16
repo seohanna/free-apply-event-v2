@@ -2,10 +2,9 @@ export const marketingData = [
   {
     id: 1,
     title: '개인신용정보의 수집/이용동의(필수)',
-    label: 'check1',
+    label: 'select-1',
     name: 'required1',
-    required: true,
-    message: '필수 체크사항은 모두 동의해주세요',
+    required: '필수 체크사항은 모두 동의해주세요',
     textArea: `
       
         <p>[개인정보보호법] 및 [신용정보의 이용 및 보호에 관한 법률]에 따라 아래와 같은 내용으로 본인의 개인(신용)정보의 수집, 이용하는 것에 동의합니다.</p>
@@ -76,10 +75,9 @@ export const marketingData = [
   {
     id: 2,
     title: '제3자 정보 제공 동의(필수)',
-    label: 'check2',
+    label: 'select-2',
     name: 'required2',
-    required: true,
-    message: '필수 체크사항은 모두 동의해주세요',
+    required: '필수 체크사항은 모두 동의해주세요',
     textArea: `
       <p>[개인정보보호법] 및 [신용정보의 이용 및 보호에 관한 법률]에 따라 아래와 같은 내용으로 본인의 개인(신용) 정보 제공에 동의합니다.</p>
       <div>
@@ -97,10 +95,9 @@ export const marketingData = [
   {
     id: 3,
     title: '보험약관 동의(필수)',
-    label: 'check3',
+    label: 'select-3',
     name: 'required3',
-    required: true,
-    message: '필수 체크사항은 모두 동의해주세요',
+    required: '필수 체크사항은 모두 동의해주세요',
     textArea: `
       <a href='../../assets/windstormclause.pdf'>소상공인 풍수해보험VI약관.pdf</a>
     `
@@ -108,10 +105,8 @@ export const marketingData = [
   {
     id: 4,
     title: '마케팅 활용동의(선택)',
-    label: 'check4',
+    label: 'select-4',
     name: 'marketing_option',
-    required: false,
-    message: '',
     textArea: `
       <ul>
         <li>
