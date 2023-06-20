@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { useFormContext } from 'react-hook-form';
 import checkIcon from '../../assets/icon/checkInput.png';
 import checkedIcon from '../../assets/icon/checkInputChecked.png';
@@ -8,7 +8,11 @@ import { ErrorMessage } from '@hookform/error-message';
 const InputWrap = styled.div`
   width: 100%;
   position: relative;
-
+  .comment {
+    font-size: 11px;
+    color: #ff0000;
+    font-weight: 400;
+  }
   ${props => props.theme.window.mobile} {
    
   }
@@ -58,6 +62,9 @@ const CheckGroup = styled.div`
     }
   }
 
+  ${props => props.comment && css`
+    margin-bottom: 0;
+  `}
 `;
 
 const Label = styled.label`
@@ -83,14 +90,8 @@ const ErrorText = styled.p`
   }
 `;
 
-const Caution = styled.span`
-  color: #ED0000;
-  display: block;
-  font-size: 10px;
-`;
-
 const CheckInput = ({
-   label, placeholder, onClick, checked
+   label, onClick, checked, comment
 }) =>  {
   const { register, formState: { errors } } = useFormContext({
     mode: 'onBlur',
@@ -101,7 +102,7 @@ const CheckInput = ({
       {label && (
         <Label>{label}</Label>
       )}
-      <CheckGroup onClick={onClick}>
+      <CheckGroup onClick={onClick} comment={comment}>
         <input
           name='msme'
           type='checkbox'
@@ -113,7 +114,7 @@ const CheckInput = ({
           소상공인여부 체크
         </label>
       </CheckGroup>
-      <Caution>*업종 중 주유소 및 경정비업소는 가입이 불가합니다.</Caution>
+      {comment && (<p className='comment'>{comment}</p>)}
       <ErrorMessage
         errors={errors}
         name='msme'

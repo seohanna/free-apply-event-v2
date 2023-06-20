@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { useFormContext } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 
@@ -8,6 +8,11 @@ const InputWrap = styled.div`
   position: relative;
   margin-bottom: 25px;
   
+  .comment {
+    font-size: 11px;
+    color: #ff0000;
+    font-weight: 400;
+  }
   ${props => props.theme.window.mobile} {
     margin-bottom: 20px;
   }
@@ -25,7 +30,9 @@ const InputBase = styled.input`
   background: none;
   color: #989898;
   
-  
+  ${props => props.comment && css`
+    margin-bottom: 0;
+  `}
   ::placeholder {
     color: #DADADA;
     font-size: 13px;
@@ -48,8 +55,6 @@ const ErrorText = styled.p`
   line-height: 13px;
   padding-top: 5px;
   color: ${(props) => props.theme.color.WARNING_MESSAGE};
-  /* position: absolute; */
-  bottom: -17px;
 
   ${props => props.theme.window.mobile} {
 
@@ -57,7 +62,7 @@ const ErrorText = styled.p`
 `;
 
 const Input = ({
-  name, placeholder, onChange, label, type, defaultValue,
+  name, placeholder, onChange, label, type, defaultValue, comment, 
   readOnly, require, validate, pattern, maxLength, minLength
 }) =>  {
   const { register, formState: { errors } } = useFormContext({
@@ -75,6 +80,7 @@ const Input = ({
         placeholder={placeholder}
         readOnly={readOnly}
         defaultValue={defaultValue}
+        comment={comment}
         {...register(name, {
           required: require,
           validate: validate,
@@ -83,6 +89,7 @@ const Input = ({
           minLength: minLength,
         })}
       />
+      {comment && (<p className='comment'>{comment}</p>)}
       <ErrorMessage
         errors={errors}
         name={name}

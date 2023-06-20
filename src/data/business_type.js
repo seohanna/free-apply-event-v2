@@ -1,3 +1,9 @@
+export const yanolja_data = [
+  {
+    value: "0902000000",
+    title: '숙박업'
+  }
+]
 export const data = [
   {
     value: "",

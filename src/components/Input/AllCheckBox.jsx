@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
-import styled, { css } from "styled-components";
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 import { useFormContext } from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
-import { marketingData } from "../../data/marketing_check";
 import checkIcon from '../../assets/icon/checkInput.png';
 import checkIconChecked from '../../assets/icon/checkInputChecked.png';
 
@@ -177,12 +176,19 @@ const Info = styled.div`
   }
 `;
 
-const AllCheckBox = (props) => {
+const AllCheckBox = ({data}) => {
   const {register, watch, formState: { errors }} = useFormContext({
-    mode: 'onClick'
+    defaultChecked: {
+      required1: false,
+      required2: false,
+      required3: false,
+      marketing_option: false
+    },
+    mode: 'onChange'
   });
   const [activeIndex, setActiveIndex] = useState();
   const [checkItems, setCheckItems] = useState([]);
+
   useEffect(() => {
     watch('')
   })
@@ -199,7 +205,7 @@ const AllCheckBox = (props) => {
   const handleAllCheck = (checked) => {
     if (checked) {
       const idArray = [];
-      marketingData.forEach((el) => idArray.push(el.id));
+      data.forEach((el) => idArray.push(el.id));
       setCheckItems(idArray);
     } else {
       setCheckItems([]);
@@ -214,13 +220,16 @@ const AllCheckBox = (props) => {
     <>
       <CheckBoxGroup>
         <AllChecked>
-          <input type="checkbox" 
-            checked={checkItems.length === marketingData.length ? true : false}
-            onClick={(e) => handleAllCheck(e.target.checked)}  id='all'/>
+          <input type="checkbox"
+            
+            checked={checkItems.length === data.length ? true : false}
+            onClick={(e) => handleAllCheck(e.target.checked)} 
+            id='all'
+          />
           <label for='all'>전체 약관 동의</label>
         </AllChecked>
         <SelectChecked className="accordion">
-          {marketingData.map((item) => {
+          {data.map((item) => {
             return (
               <>
               <li key={item.id}>
@@ -229,12 +238,12 @@ const AllCheckBox = (props) => {
                     <input 
                       type="checkbox" 
                       id={item.label}
-                      checked={checkItems.includes(item.id) ? true : false}
+                      checked={checkItems.includes(item.id) ? true : false }
                       {...register(item.name, {
                         required: item.required
                       })}
+                      defaultChecked
                       onClick={(e) => handleSingleCheck(e.target.checked, item.id)}
-                      
                     />
                     <label for={item.label}>{item.title}</label>
                   </div>
@@ -242,19 +251,20 @@ const AllCheckBox = (props) => {
                 </div>
                 <Info>
                   <div
-                    className={item.id === activeIndex ? '' : 'closed' }
-                    dangerouslySetInnerHTML={{__html: item.textArea }} />
+                    className={item.id === activeIndex ? '' : 'closed'}
+                    dangerouslySetInnerHTML={{__html: item.textArea }} 
+                  />
                 </Info>           
               </li>
-              <>
-                {item.required && (
-                <ErrorMessage
-                errors={errors}
-                name={item.name}
-                render={({message}) => <ErrorText>{message}</ErrorText>}
-              />
-              )}
-              </>
+                <>
+                  {item.required && (
+                    <ErrorMessage
+                      errors={errors}
+                      name={item.name}
+                      render={({message}) => <ErrorText>{message}</ErrorText>}
+                    />
+                  )}
+                </>
               </>
             )})}
           </SelectChecked>

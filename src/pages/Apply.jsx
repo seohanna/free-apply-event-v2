@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { useFormContext } from "react-hook-form";
 import Layout from "../components/Layout";
 import yanolja from '../assets/img/yanloja.png';
@@ -12,11 +12,14 @@ import CheckInput from "../components/Input/CheckInput";
 import MsmeCheckList from "../components/MsmeCheckList";
 import AddressInput from "../components/Input/AddressInput";
 import SelectInput from "../components/Input/SelectInput";
-import { business_owner, data } from "../data/business_type";
+import { business_owner, data, yanolja_data } from "../data/business_type";
 import Button from "../components/Button/BasicButton";
 // import RegiInput from "../components/Input/RegiInput";
 import Modal from "../components/Modal";
+import { floor_back, floor_front } from "../data/business_floor";
+import selectIcon from '../assets/icon/selectIcon.png';
 import AllCheckBox from "../components/Input/AllCheckBox";
+import { marketingData } from "../data/marketing_check";
 
 const ApplyWrap = styled.div`
   padding-top: 20px;
@@ -32,9 +35,9 @@ const ApplyWrap = styled.div`
       width: 100%;
       height: 39px;
       padding: 7px;
-      margin-bottom: 5px;
       border: 1px solid #DADADA;
       border-radius: 5px;
+      margin-bottom: 5px;
       font-size: 13px;
       background: none;
       color: #989898;
@@ -43,8 +46,18 @@ const ApplyWrap = styled.div`
         font-size: 13px;
       }
     }
+    .input {
+      margin-bottom: 0;
+    }
+    .comment {
+      font-size: 11px;
+      color: #ff0000;
+      font-weight: 400;
+    }
   }
-
+  .input-box.frip {
+    margin-bottom: 0;
+  }
   .label {
     display: block;
     width: 100%;
@@ -132,6 +145,7 @@ const Title = styled.h1`
 `;
 
 const NonLabel = styled.div`
+  margin-bottom: 25px;
   > div {
     margin-bottom: 5px;
     > input {
@@ -198,6 +212,33 @@ const MarketingPopupWrap = styled.div`
   overflow-y: scroll;
 `;
 
+const BusinessInfo = styled.div`
+  > div {
+    margin-bottom: 0;
+  }
+  .select-wrap {
+    display: flex;
+    select {
+      background: url(${selectIcon}) no-repeat 97.5%;
+    }
+  }
+
+  ${props => props.disabled && css`
+    display: none;
+  `}
+`;
+
+const Dash = styled.div`
+	align-self: center;
+	margin: 0 10px;
+`;
+
+const HiddenInput = styled.input`
+  position: absolute;
+  left: -1000%;
+`;
+
+
 const Apply = () => {
   const [searchParams] = useSearchParams();
   const jehuCd = searchParams.get('jehuCd');
@@ -206,12 +247,9 @@ const Apply = () => {
   const [jehuImage, setJehuImage] = useState('');
   const [knowPopup, setKnowPopup] = useState(false);
   const [marketingPopup, setMarketingPopup] = useState(false);
- 
-  const { watch, setValue, handleSubmit, register, setError, trigger, formState: { errors } } = useFormContext({
-    mode: 'all'
+  const { watch, setValue, handleSubmit, register, trigger, formState: { errors } } = useFormContext({
+    mode: 'onBlur'
   });
-
-  useEffect(() => {console.log(watch('know_check'))}, [knowPopup]);
 
   const onError = (error) => {
     console.log(watch())
@@ -221,28 +259,35 @@ const Apply = () => {
   const onSubmit = async(data) => {
     if (!watch('know_check')) {
       setKnowPopup(true);
-    } else {
+    } 
+    else {
       setMarketingPopup(true);
+      // setValue('business_type', "여관/여인숙/유스호스텔");
     }
     console.log(JSON.stringify(data), data)
   }
 
   const onSubmit2 = async(data) => {
+    
     console.log(watch())
     console.log(JSON.stringify(data), data)
+
   }
 
   const knowChecking = () => {
-
     setValue('know_check', true)
     setKnowPopup(false)
-    
   }
+
   useEffect(() => {
     console.log(jehuCd)
+    console.log(watch('know_check'))
     switch (jehuCd) {
       case 'yanolja_f' : 
         setJehuImage(yanolja);
+        setValue('business_area', '50')
+        setValue('floor_low', '1')
+        setValue('floor_high', '20')
         break;
       case 'lottecard_f' :
         setJehuImage(insurobo);
@@ -372,12 +417,18 @@ const Apply = () => {
           )}
         </Header>
         <ApplyWrap>
+          <HiddenInput
+            type='text'
+            value='2'
+            {...register('business_objCat')}
+          />
           <Input 
-            label='이름'
+            label={jehuCd === 'frip_f' ? '이름 / 프립 호스트명' : '이름'}
             name='polholder' 
-            placeholder='이름' 
+            placeholder={jehuCd === 'frip_f' ? '이름 / 프립 호스트명' : '이름'}
             type='text'
             require='*필수입력사항입니다.'
+            comment={jehuCd === 'frip_f' ? '*비호스트는 가입이 불가합니다.' : ''}
           />
           <label className="label">주민등록번호</label>
           <RegiInput>
@@ -395,7 +446,7 @@ const Apply = () => {
               />
               <p className="error-text">{errors.regi_birth_front?.message}</p>
             </div>
-            <div className="input-box">
+            <div className='input-box'>
               <input
                 type='password'
                 placeholder="주민번호 뒷자리"
@@ -411,13 +462,13 @@ const Apply = () => {
               <p className="error-text">{errors.regi_birth_back?.message}</p>
             </div>
           </RegiInput>
-            
-            
+
           <div className="input-box">
             <label className="label">휴대폰번호</label>
             <input
+              className={jehuCd === 'frip_f' ? 'input' : ''}
               type='phone'
-              placeholder="휴대폰번호"
+              placeholder="본인명의 휴대폰번호 (-없이)"
               {...register('mobile', {
                 required: '*필수 입력 항목입니다.',
                 pattern : {
@@ -426,6 +477,7 @@ const Apply = () => {
                 }
               })}
             />
+            {jehuCd === 'frip_f' && (<p className="comment">*입력하신 휴대폰번호 또는 주소로 증권이 전달됩니다.</p>)}
             <p className="error-text">{errors.mobile?.message}</p>
           </div>
           
@@ -433,6 +485,7 @@ const Apply = () => {
             label='법률상 소상공인'
             onClick={openMsmeCheckList}
             checked={checked}
+            comment='*업종 중 주유소 및 경정비업소는 가입이 불가합니다.'
           />
           <AddressInput />
           <Input
@@ -444,9 +497,10 @@ const Apply = () => {
           <SelectInput
             label='가입업종'
             name='business_type'
-            options={data}
+            options={jehuCd === 'yanolja_f' ? yanolja_data : data}
             required='*필수선택사항입니다.'
           />
+          
           <NonLabel>
             <Input 
               name='business_number' 
@@ -463,12 +517,33 @@ const Apply = () => {
               type='text'
               require='*필수입력사항입니다.'
             />
+            <SelectInput
+              name='business_owner'
+              options={business_owner}
+              required='*필수선택사항입니다.'
+            />
           </NonLabel>
-          <SelectInput
-            name='business_owner'
-            options={business_owner}
-            required='*필수선택사항입니다.'
-          />
+          <BusinessInfo disabled={jehuCd === 'yanolja_f' ? true : false}>
+            <Input
+              label='사업장 정보'
+              name='business_area'
+              type='tel'
+              required='*필수선택사항입니다.'
+              placeholder='가입 층수 면적 (㎡)'
+            />
+            <div className="select-wrap">
+              <SelectInput
+                name='floor_low'
+                options={floor_front}
+              />
+              <Dash>-</Dash>
+              <SelectInput
+                name='floor_high'
+                options={floor_back}
+              />
+            </div>
+          </BusinessInfo>
+          
           <input type='checkbox' {...register('know_check')} />
           <ButtonGroup>
             <Button onClick={() => setKnowPopup(true)} disabled={watch('know_check') ? false : true}>알아두실 사항 확인하기</Button>
@@ -519,7 +594,7 @@ const Apply = () => {
         {marketingPopup && (
           <Modal onClick={() => setMarketingPopup(false)}>
             <MarketingPopupWrap>
-              <AllCheckBox />
+              <AllCheckBox data={marketingData}/>
               <Button onClick={handleSubmit(onSubmit2, onError)}>가입신청</Button>
             </MarketingPopupWrap>
           </Modal>

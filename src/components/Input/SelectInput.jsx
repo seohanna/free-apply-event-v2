@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useFormContext } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
@@ -24,6 +24,10 @@ const InputWrap = styled.div`
     
     > option {
       width: 100%;
+    }
+    input {
+      position: absolute;
+      left: -1000%;
     }
   }
 `;
@@ -57,7 +61,6 @@ const SelectInput = ({name, label, options, required, ...rest}) =>  {
   const { register, formState: { errors } } = useFormContext({
     mode: 'onBlur',
   });
-
   return (
     <InputWrap>
       {label && (<Label>{label}</Label>)}
@@ -69,10 +72,13 @@ const SelectInput = ({name, label, options, required, ...rest}) =>  {
         {...rest}
       >
         {options.map(option => (
-          <option key={option.value} value={option.value}>
-            {option.title}
-          </option>
-        ))} 
+          <>
+            <option key={option.value} value={option.title}>
+              {option.title}
+            </option>
+            
+          </>
+        ))}
       </select>
       <ErrorMessage
         errors={errors}
