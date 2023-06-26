@@ -262,7 +262,6 @@ const Apply = () => {
     } 
     else {
       setMarketingPopup(true);
-      // setValue('business_type', "여관/여인숙/유스호스텔");
     }
     console.log(JSON.stringify(data), data)
   }
